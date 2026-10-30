@@ -6,7 +6,7 @@ import { AppProviders } from "./providers";
 
 import appStylesHref from "./styles/app.css?url";
 
-export function Layout({ children }: { children: ReactNode }) {
+export const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <html lang="ko">
       <head>
@@ -23,23 +23,23 @@ export function Layout({ children }: { children: ReactNode }) {
       </body>
     </html>
   );
-}
+};
 
-export default function App() {
+const App = () => {
   return (
     <AppProviders>
       <Outlet />
     </AppProviders>
   );
-}
+};
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let title = "Something went wrong";
-  let description = "The application hit an unexpected error.";
+export const ErrorBoundary = ({ error }: Route.ErrorBoundaryProps) => {
+  let title = "오류가 발생했습니다";
+  let description = "요청을 처리하지 못했습니다.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    title = error.status === 404 ? "Page not found" : `Error ${error.status}`;
+    title = error.status === 404 ? "페이지를 찾을 수 없습니다" : `오류 ${error.status}`;
     description = error.statusText || description;
   } else if (import.meta.env.DEV && error instanceof Error) {
     description = error.message;
@@ -49,11 +49,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <main className="error-page">
       <div>
-        <p className="eyebrow">Error</p>
         <h1>{title}</h1>
         <p>{description}</p>
         {stack ? <pre>{stack}</pre> : null}
       </div>
     </main>
   );
-}
+};
+
+export default App;
