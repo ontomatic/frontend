@@ -1,0 +1,8 @@
+node_modules
+.pnpm-store
+.react-router
+build
+dist
+.env
+.env.*
+!.env.example

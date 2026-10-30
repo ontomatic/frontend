@@ -1,0 +1,7 @@
+.react-router
+build
+node_modules
+.pnpm-store
+.env
+.env.*
+README.md
