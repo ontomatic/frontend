@@ -8,6 +8,7 @@ import { createServer } from "vite";
 const server = await createServer({
   configFile: false,
   root: fileURLToPath(new URL("..", import.meta.url)),
+  define: { "import.meta.env.VITE_API_BASE_URL": JSON.stringify("https://api.example.test") },
   server: { middlewareMode: true, hmr: false },
 });
 after(() => server.close());
@@ -78,6 +79,10 @@ afterEach(() => {
   axios.defaults.adapter = originalStorageAdapter;
   if (originalDocument) Object.defineProperty(globalThis, "document", originalDocument);
   else delete globalThis.document;
+});
+
+await test("uses the configured API base URL for requests", () => {
+  assert.equal(apiClient.getUri({ url: "/api/v1/auth/me" }), "https://api.example.test/api/v1/auth/me");
 });
 
 await test("logs in with the backend contract and saves a session cookie", async () => {
