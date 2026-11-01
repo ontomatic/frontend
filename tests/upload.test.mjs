@@ -3,11 +3,14 @@ import { after, afterEach, beforeEach, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import axios, { AxiosError } from "axios";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { createServer } from "vite";
 
 const server = await createServer({
   configFile: false,
   root: fileURLToPath(new URL("..", import.meta.url)),
+  resolve: { tsconfigPaths: true },
   define: { "import.meta.env.VITE_API_BASE_URL": JSON.stringify("https://api.example.test") },
   server: { middlewareMode: true, hmr: false },
 });
@@ -16,6 +19,8 @@ after(() => server.close());
 const { getAccessToken, login, logout } = await server.ssrLoadModule("/app/lib/api/auth.ts");
 const { uploadFiles } = await server.ssrLoadModule("/app/lib/api/file.ts");
 const { default: apiClient, getErrorMessage } = await server.ssrLoadModule("/app/lib/api/client.ts");
+const { clientLoader } = await server.ssrLoadModule("/app/routes/need-auth-layout.tsx");
+const { FileUploadButton } = await server.ssrLoadModule("/app/features/upload/file-upload-button.tsx");
 const originalApiAdapter = apiClient.defaults.adapter;
 const originalStorageAdapter = axios.defaults.adapter;
 const originalDocument = Object.getOwnPropertyDescriptor(globalThis, "document");
@@ -83,6 +88,52 @@ afterEach(() => {
 
 await test("uses the configured API base URL for requests", () => {
   assert.equal(apiClient.getUri({ url: "/api/v1/auth/me" }), "https://api.example.test/api/v1/auth/me");
+});
+
+await test("offers an upload button instead of a form and disables it while uploading", () => {
+  const renderButton = (isPending) =>
+    renderToStaticMarkup(createElement(FileUploadButton, { isPending, onUpload: () => {} }));
+  const idle = renderButton(false);
+  assert.match(idle, /<button[^>]*>파일 업로드<\/button>/);
+  assert.doesNotMatch(idle, /<form\b|disabled=""/);
+  assert.match(renderButton(true), /<button[^>]*disabled=""[^>]*>업로드 및 문서 처리 중…<\/button>/);
+});
+
+await test("verifies authentication with the current token before loading a protected page", async () => {
+  assert.equal(await clientLoader(), null);
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].method, "get");
+  assert.equal(requests[0].url, "/api/v1/auth/me");
+  assert.equal(requests[0].headers.get("Authorization"), "Bearer access-token");
+});
+
+await test("clears the session and redirects to login when authentication returns 401", async () => {
+  apiClient.defaults.adapter = async (config) => {
+    throw new AxiosError("Unauthorized", "ERR_BAD_REQUEST", config, undefined, response(config, {}, 401));
+  };
+
+  for (const value of ["", "accessToken=expired-token"]) {
+    cookieHeader = value;
+    await assert.rejects(
+      clientLoader,
+      (error) => error instanceof Response && error.status === 302 && error.headers.get("Location") === "/auth/login",
+    );
+  }
+  assert.equal(cookieWrites.length, 2);
+  assert.ok(cookieWrites.every((value) => value.split("; ").includes("Max-Age=0")));
+});
+
+await test("preserves the session and propagates authentication errors other than 401", async () => {
+  for (const error of [
+    new AxiosError("Server error", "ERR_BAD_RESPONSE", undefined, undefined, { status: 500 }),
+    new AxiosError("Network Error", "ERR_NETWORK"),
+  ]) {
+    apiClient.defaults.adapter = async () => {
+      throw error;
+    };
+    await assert.rejects(clientLoader, (received) => received === error);
+  }
+  assert.equal(cookieWrites.length, 0);
 });
 
 await test("logs in with the backend contract and saves a session cookie", async () => {
