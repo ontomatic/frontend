@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
 import type { Route } from "./+types/root";
-import { AppProviders } from "./providers";
+import AppProviders from "./providers";
 
 import appStylesHref from "./styles/app.css?url";
 

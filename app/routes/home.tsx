@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
-import { FileUploadButton } from "~/features/upload/file-upload-button";
+import FileUploadButton from "~/features/upload/file-upload-button";
 import { logout } from "~/lib/api/auth";
 import { getErrorMessage } from "~/lib/api/client";
 import { uploadFiles } from "~/lib/api/file";

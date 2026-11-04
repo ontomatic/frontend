@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-import { LoginForm } from "~/features/auth/login-form";
+import LoginForm from "~/features/auth/login-form";
 
 export const meta = () => [{ title: "로그인" }];
 

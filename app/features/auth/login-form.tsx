@@ -4,7 +4,10 @@ import { useForm } from "react-hook-form";
 import { login } from "~/lib/api/auth";
 import { getErrorMessage } from "~/lib/api/client";
 
-export const LoginForm = ({ onLogin }: { onLogin: () => void }) => {
+interface LoginFormProps {
+  onLogin: () => void;
+}
+const LoginForm = ({ onLogin }: LoginFormProps) => {
   const { handleSubmit, register } = useForm<{ emp_id: string; password: string }>();
   const mutation = useMutation({ mutationFn: login, onSuccess: onLogin, retry: false, gcTime: 0 });
 
@@ -33,3 +36,5 @@ export const LoginForm = ({ onLogin }: { onLogin: () => void }) => {
     </form>
   );
 };
+
+export default LoginForm;
