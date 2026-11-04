@@ -8,5 +8,6 @@ export default [
     route("specifications/:specificationId", "routes/specification.tsx"),
     route("jobs/:jobId", "routes/job.tsx"),
     route("documents", "routes/documents.tsx"),
+    route("history", "routes/history.tsx"),
   ]),
 ] satisfies RouteConfig;
