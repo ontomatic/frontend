@@ -8,6 +8,15 @@
   font-display: swap;
 }
 
+@theme {
+  --font-sans: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-canvas: #fffaf1;
+  --color-ink: #41464d;
+  --color-muted: #706d65;
+  --color-line: #eee8de;
+  --color-accent: #9a4b13;
+}
+
 :root {
   color: #17201b;
   background: #f7f8f3;
@@ -160,4 +169,47 @@ button:disabled {
   padding: 16px;
   background: #17201b;
   color: #f5f7ef;
+}
+
+@layer base {
+  html {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+  body {
+    @apply m-0 min-h-screen min-w-80;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600;
+  }
+  input:not([type="checkbox"]):not([type="file"]),
+  select,
+  textarea {
+    @apply border-line w-full min-w-0 rounded-md border bg-white px-3 py-2.5 text-sm disabled:bg-stone-50 disabled:text-stone-500;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-stone-400;
+  }
+  textarea {
+    @apply min-h-24 resize-y;
+  }
+  input[type="file"] {
+    @apply max-w-full rounded-lg border border-dashed border-stone-300 p-3 text-sm;
+  }
+  summary {
+    @apply cursor-pointer;
+  }
+  a {
+    @apply text-accent;
+  }
 }

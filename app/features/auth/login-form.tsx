@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
+import Button from "~/components/button";
+import Field from "~/components/field";
+import Notice from "~/components/notice";
 import { login } from "~/lib/api/auth";
-import { getErrorMessage } from "~/lib/api/client";
 
 interface LoginFormProps {
   onLogin: () => void;
@@ -12,14 +14,12 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const mutation = useMutation({ mutationFn: login, onSuccess: onLogin, retry: false, gcTime: 0 });
 
   return (
-    <form className="form" onSubmit={handleSubmit((values) => mutation.mutate(values))}>
-      <p className="form-note">파일을 업로드하려면 로그인해 주세요.</p>
-      <label>
-        <span>사번</span>
+    <form className="mt-5 grid gap-4" onSubmit={handleSubmit((values) => mutation.mutate(values))}>
+      <p className="text-muted text-sm">사양·생산·검사 업무를 이어서 확인하세요.</p>
+      <Field label="사번">
         <input autoComplete="username" maxLength={30} required disabled={mutation.isPending} {...register("emp_id")} />
-      </label>
-      <label>
-        <span>비밀번호</span>
+      </Field>
+      <Field label="비밀번호">
         <input
           autoComplete="current-password"
           maxLength={30}
@@ -28,11 +28,11 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
           disabled={mutation.isPending}
           {...register("password")}
         />
-      </label>
-      <button disabled={mutation.isPending} type="submit">
+      </Field>
+      <Button variant="primary" disabled={mutation.isPending} type="submit">
         {mutation.isPending ? "로그인 중…" : "로그인"}
-      </button>
-      {mutation.error ? <p role="alert">{getErrorMessage(mutation.error)}</p> : null}
+      </Button>
+      {mutation.error ? <Notice error={mutation.error} /> : null}
     </form>
   );
 };
