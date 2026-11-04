@@ -75,7 +75,7 @@ beforeEach(() => {
         config,
         files.map((_, index) => ({
           file_id: index + 1,
-          upload_url: `https://storage.example/${index + 1}?signature=abc`,
+          upload_url: `/storage/${index + 1}?signature=abc`,
         })),
       );
     }
@@ -772,8 +772,8 @@ await test("uploads raw files, preserves MIME types, and only authenticates API 
     requests.map(({ method, url }) => [method, url]),
     [
       ["post", "/api/v1/uploads"],
-      ["put", "https://storage.example/1?signature=abc"],
-      ["put", "https://storage.example/2?signature=abc"],
+      ["put", "/storage/1?signature=abc"],
+      ["put", "/storage/2?signature=abc"],
       ["post", "/api/v1/uploads/1/complete"],
       ["post", "/api/v1/uploads/2/complete"],
     ],

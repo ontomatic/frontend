@@ -6,7 +6,7 @@ import apiClient, { getErrorMessage } from "./client";
 const uploadUrlsSchema = z.array(
   z.object({
     file_id: z.number().int().positive(),
-    upload_url: z.url(),
+    upload_url: z.union([z.url(), z.string().startsWith("/storage/")]),
   }),
 );
 
