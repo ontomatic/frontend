@@ -6,6 +6,7 @@ export default [
   layout("routes/need-auth-layout.tsx", [
     index("routes/home.tsx"),
     route("specifications/:specificationId", "routes/specification.tsx"),
+    route("jobs/:jobId", "routes/job.tsx"),
     route("documents", "routes/documents.tsx"),
   ]),
 ] satisfies RouteConfig;
