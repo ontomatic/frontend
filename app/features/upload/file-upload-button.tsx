@@ -1,12 +1,6 @@
 import { useRef } from "react";
 
-export const FileUploadButton = ({
-  isPending,
-  onUpload,
-}: {
-  isPending: boolean;
-  onUpload: (files: File[]) => void;
-}) => {
+const FileUploadButton = ({ isPending, onUpload }: { isPending: boolean; onUpload: (files: File[]) => void }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -35,3 +29,5 @@ export const FileUploadButton = ({
     </>
   );
 };
+
+export default FileUploadButton;

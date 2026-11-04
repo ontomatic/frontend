@@ -8,156 +8,142 @@
   font-display: swap;
 }
 
-:root {
-  color: #17201b;
-  background: #f7f8f3;
-  font-family:
-    "Pretendard Variable",
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+@theme {
+  --font-sans: "Pretendard Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-canvas: #fffaf1;
+  --color-ink: #41464d;
+  --color-muted: #706d65;
+  --color-line: #eee8de;
+  --color-accent: #9a4b13;
 }
 
-* {
+.production-gantt .wx-willow-theme {
+  height: 100%;
+  --wx-font-family: var(--font-sans);
+}
+
+.production-gantt .wx-bar.wx-task {
+  --wx-gantt-task-font-color: var(--color-ink);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - min(10px, 30%)) 0, 100% 50%, calc(100% - min(10px, 30%)) 100%, 0 100%);
+}
+
+.production-gantt .wx-bars .wx-bar.wx-task:focus {
+  outline-offset: -2px;
+}
+
+.production-gantt .gantt-task-text {
   box-sizing: border-box;
+  height: 100%;
+  padding-left: 6px;
+  padding-right: min(16px, 30%);
 }
 
-body {
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
+.production-gantt .wx-scale .wx-cell-value {
+  padding-inline: 4px;
 }
 
-button,
-input {
-  font: inherit;
+.production-gantt .wx-scale .wx-row:first-child .wx-cell {
+  justify-content: flex-start;
 }
 
-button {
-  border: 0;
-  cursor: pointer;
+.production-gantt .wx-scale .wx-row:first-child .wx-cell > span {
+  position: sticky;
+  left: 8px;
+  right: 224px;
+  padding-inline: 4px;
 }
 
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.64;
-}
-
-.page-shell {
-  width: min(640px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 48px 0;
-}
-
-.panel {
-  border: 1px solid #dfe5d9;
-  border-radius: 8px;
-  background: #ffffff;
-  padding: 28px;
-}
-
-.panel h1 {
-  margin: 0;
-  color: #101712;
-  font-size: 1.5rem;
-}
-
-.form {
-  display: grid;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-.form label {
-  display: grid;
-  gap: 8px;
-  color: #253328;
-  font-weight: 700;
-}
-
-.form input {
-  width: 100%;
-  border: 1px solid #cdd8c7;
-  border-radius: 8px;
-  padding: 12px 14px;
-  background: #fbfcf8;
-  color: #162019;
-  outline: none;
-}
-
-.form input:focus {
-  border-color: #4f7f52;
-  box-shadow: 0 0 0 3px rgb(79 127 82 / 16%);
-}
-
-.form button {
-  justify-self: start;
-  border-radius: 8px;
-  padding: 12px 16px;
-  background: #18251c;
-  color: #ffffff;
-  font-weight: 750;
-}
-
-.form-note {
-  margin: 0;
-  color: #3f5f43;
-  font-weight: 650;
-}
-
-.upload-actions {
+.gantt-scale-controls {
+  position: absolute;
+  z-index: 6;
+  top: 1px;
+  right: 18px;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  height: 38px;
+  padding-inline: 8px;
+  background: white;
+  font-size: 12px;
 }
 
-.upload-results {
-  display: grid;
-  gap: 12px;
-  margin: 0;
-  padding-left: 20px;
-  overflow-wrap: anywhere;
+.gantt-scale-controls input[type="range"] {
+  width: 96px;
+  height: 24px;
+  padding: 0;
+  border: 0;
 }
 
-.upload-results span {
-  display: block;
-  margin-top: 4px;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-0),
+.gantt-track-0 {
+  --wx-gantt-task-color: #d5c1b3;
 }
 
-.error-page {
-  display: grid;
-  min-height: 100vh;
-  place-items: center;
-  padding: 32px;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-1),
+.gantt-track-1 {
+  --wx-gantt-task-color: #cdcfba;
 }
 
-.error-page > div {
-  width: min(720px, 100%);
-  border: 1px solid #dfe5d9;
-  border-radius: 8px;
-  padding: 32px;
-  background: #ffffff;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-2),
+.gantt-track-2 {
+  --wx-gantt-task-color: #d5bcb4;
 }
 
-.error-page h1 {
-  margin: 0;
-  color: #101712;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-3),
+.gantt-track-3 {
+  --wx-gantt-task-color: #dacbaf;
 }
 
-.error-page p {
-  color: #4f5f52;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-4),
+.gantt-track-4 {
+  --wx-gantt-task-color: #cbbec2;
 }
 
-.error-page pre {
-  overflow: auto;
-  border-radius: 8px;
-  padding: 16px;
-  background: #17201b;
-  color: #f5f7ef;
+.production-gantt .wx-bar.wx-task:has(.gantt-track-5),
+.gantt-track-5 {
+  --wx-gantt-task-color: #c3c7c2;
+}
+
+@layer base {
+  html {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+  body {
+    @apply m-0 min-h-screen min-w-80;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600;
+  }
+  input:not([type="checkbox"]):not([type="file"]),
+  select,
+  textarea {
+    @apply border-line w-full min-w-0 rounded-md border bg-white px-3 py-2.5 text-sm disabled:bg-stone-50 disabled:text-stone-500;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-stone-400;
+  }
+  textarea {
+    @apply min-h-24 resize-y;
+  }
+  input[type="file"] {
+    @apply max-w-full rounded-lg border border-dashed border-stone-300 p-3 text-sm;
+  }
+  summary {
+    @apply cursor-pointer;
+  }
+  a {
+    @apply text-accent;
+  }
 }

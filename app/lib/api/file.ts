@@ -6,14 +6,14 @@ import apiClient, { getErrorMessage } from "./client";
 const uploadUrlsSchema = z.array(
   z.object({
     file_id: z.number().int().positive(),
-    upload_url: z.url(),
+    upload_url: z.union([z.url(), z.string().startsWith("/storage/")]),
   }),
 );
 
 export type UploadResult = { fileId: number; filename: string; error?: string };
 type UploadUrl = z.infer<typeof uploadUrlsSchema>[number];
 
-const getUploadUrls = async (files: File[]): Promise<UploadUrl[]> => {
+const getUploadUrls = async (files: File[], kind: string): Promise<UploadUrl[]> => {
   if (files.length < 1 || files.length > 10) throw new Error("파일은 한 번에 1~10개까지 선택해 주세요.");
 
   if (files.some(({ name }) => !name || name.length > 255)) throw new Error("파일 이름은 1~255자여야 합니다.");
@@ -26,7 +26,7 @@ const getUploadUrls = async (files: File[]): Promise<UploadUrl[]> => {
     content_type: type || "application/octet-stream",
   }));
 
-  const { data } = await apiClient.post<unknown>("/api/v1/uploads", { files: metadata });
+  const { data } = await apiClient.post<unknown>("/api/v1/uploads", { kind, files: metadata });
   const urls = uploadUrlsSchema.length(files.length).safeParse(data);
   if (!urls.success) throw new Error("업로드 URL 응답이 올바르지 않습니다. 다시 시도해 주세요.");
 
@@ -46,8 +46,8 @@ const completeFileUpload = async (fileId: number): Promise<void> => {
   });
 };
 
-export const uploadFiles = async (files: File[]): Promise<UploadResult[]> => {
-  const urls = await getUploadUrls(files);
+export const uploadFiles = async (files: File[], kind: string): Promise<UploadResult[]> => {
+  const urls = await getUploadUrls(files, kind);
 
   return Promise.all(
     files.map(async (file, index): Promise<UploadResult> => {

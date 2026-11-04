@@ -16,7 +16,6 @@ RUN npm pkg delete scripts.prepare && pnpm install --prod --frozen-lockfile
 FROM base AS build-env
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 COPY . .
-ARG VITE_API_BASE_URL=/
 RUN pnpm build
 
 FROM base
