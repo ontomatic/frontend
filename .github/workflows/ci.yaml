@@ -28,4 +28,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/ontomatic/frontend:${{ github.sha }}
+          tags: |
+            ghcr.io/ontomatic/frontend:latest
+            ghcr.io/ontomatic/frontend:${{ github.sha }}
