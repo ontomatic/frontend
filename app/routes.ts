@@ -10,5 +10,6 @@ export default [
     route("documents", "routes/documents.tsx"),
     route("history", "routes/history.tsx"),
     route("knowledge", "routes/knowledge.tsx"),
+    route("admin", "routes/admin.tsx"),
   ]),
 ] satisfies RouteConfig;
